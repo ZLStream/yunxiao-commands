@@ -39,6 +39,25 @@ go build -o yx-code ./cmd/yx-code
 sudo mv yx-code /usr/local/bin/
 ```
 
+#### 安装 Claude Code 插件（可选）
+
+如需使用 Claude Code 斜杠命令，手动创建软链接：
+
+```bash
+# 安装 commands
+ln -s $(pwd)/claude-plugin/commands ~/.claude/commands/yx-commands
+
+# 安装 skills
+ln -s $(pwd)/claude-plugin/skills ~/.claude/skills/yx-commands
+```
+
+安装后可在 Claude Code 中使用：
+- `/yx-commands:commit` - 分析代码变更并提交
+- `/yx-commands:push` - 推送代码
+- `/yx-commands:mr` - 创建合并请求
+- `/yx-commands:review` - 查看代码差异
+- `/yx-commands:commit-push-mr` - 一键完成完整工作流
+
 ## 系统要求
 
 - Go 1.26.1+（从源码编译时）
