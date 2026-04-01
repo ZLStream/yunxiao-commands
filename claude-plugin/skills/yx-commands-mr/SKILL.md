@@ -1,5 +1,5 @@
 ---
-name: mr
+name: yx-commands-mr
 description: 创建云效合并请求(Merge Request)
 ---
 

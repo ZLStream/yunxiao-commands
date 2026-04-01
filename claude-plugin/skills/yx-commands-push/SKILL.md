@@ -1,5 +1,5 @@
 ---
-name: push
+name: yx-commands-push
 description: 推送代码到云效远程仓库
 ---
 

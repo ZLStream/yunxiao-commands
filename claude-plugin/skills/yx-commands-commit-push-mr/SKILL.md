@@ -1,5 +1,5 @@
 ---
-name: commit-push-mr
+name: yx-commands-commit-push-mr
 description: 一键完成提交、推送、创建合并请求（完整工作流）
 ---
 

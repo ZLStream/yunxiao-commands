@@ -18,39 +18,39 @@ tools: Bash, Read
 2. **Git 操作** - 提交、推送
 3. **yx-code 工具** - 提到云效 CLI
 4. **复合工作流** - 用户说"提交合并"、"提交并合并"、"提交MR"时，按顺序执行：
-   - 先执行 `/yx-commands:commit` 提交代码
-   - 再执行 `/yx-commands:push` 推送到远程
-   - 然后执行 `/yx-commands:mr` 创建合并请求
+   - 先执行 `/yx-commands-commit` 提交代码
+   - 再执行 `/yx-commands-push` 推送到远程
+   - 然后执行 `/yx-commands-mr` 创建合并请求
 
 ## 可用命令
 
 | 命令 | 功能 | 典型用法 |
 |------|------|----------|
-| `/yx-commands:commit` | 智能提交 | 分析变更生成 commit |
-| `/yx-commands:push` | 推送代码 | 推送到远程 |
-| `/yx-commands:mr` | 创建 MR | 提交合并请求（默认 develop） |
-| `/yx-commands:review` | 代码审查 | 查看分支差异 |
-| `/yx-commands:commit-push-mr` | 完整工作流 | 一键完成提交、推送、创建MR |
+| `/yx-commands-commit` | 智能提交 | 分析变更生成 commit |
+| `/yx-commands-push` | 推送代码 | 推送到远程 |
+| `/yx-commands-mr` | 创建 MR | 提交合并请求（默认 develop） |
+| `/yx-commands-review` | 代码审查 | 查看分支差异 |
+| `/yx-commands-commit-push-mr` | 完整工作流 | 一键完成提交、推送、创建MR |
 
 ## 典型工作流
 
 ### 一键完成（推荐）
 ```
 1. 编写代码...
-2. /yx-commands:commit-push-mr  → 一键完成提交、推送、创建MR
+2. /yx-commands-commit-push-mr  → 一键完成提交、推送、创建MR
 ```
 
 ### 分步执行
 ```
 1. 编写代码...
-2. /yx-commands:commit   → 智能生成 commit message 并提交
-3. /yx-commands:push     → 推送到远程
-4. /yx-commands:mr       → 创建合并请求
+2. /yx-commands-commit   → 智能生成 commit message 并提交
+3. /yx-commands-push     → 推送到远程
+4. /yx-commands-mr       → 创建合并请求
 ```
 
 ### 代码审查
 ```
-/yx-commands:review -t develop -s feature-branch
+/yx-commands-review -t develop -s feature-branch
 ```
 
 ## 前置条件

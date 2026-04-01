@@ -9,7 +9,7 @@
 - 📤 **推送代码** - 自动推送当前分支到远程
 - 🔀 **合并请求** - 快速创建 MR，支持指定目标分支
 - 📊 **代码差异** - 查看分支间的代码差异统计
-- 🤖 **Claude Code 集成** - 支持 Claude Code Skills/Commands 自动化工作流
+- 🤖 **AI Agent 集成** - 基于 Agent Skills 标准，兼容 Claude Code、Cursor 等 AI 编程工具
 
 ## 安装
 
@@ -39,24 +39,22 @@ go build -o yx-code ./cmd/yx-code
 sudo mv yx-code /usr/local/bin/
 ```
 
-#### 安装 Claude Code 插件（可选）
+#### 安装 AI Agent 插件（可选）
 
-如需使用 Claude Code 斜杠命令，手动创建软链接：
+如需使用斜杠命令，手动为每个 skill 创建软链接：
 
 ```bash
-# 安装 commands
-ln -s $(pwd)/claude-plugin/commands ~/.claude/commands/yx-commands
-
-# 安装 skills
-ln -s $(pwd)/claude-plugin/skills ~/.claude/skills/yx-commands
+for dir in claude-plugin/skills/*/; do
+  ln -s "$(pwd)/$dir" ~/.claude/skills/"$(basename $dir)"
+done
 ```
 
-安装后可在 Claude Code 中使用：
-- `/yx-commands:commit` - 分析代码变更并提交
-- `/yx-commands:push` - 推送代码
-- `/yx-commands:mr` - 创建合并请求
-- `/yx-commands:review` - 查看代码差异
-- `/yx-commands:commit-push-mr` - 一键完成完整工作流
+安装后可在 Claude Code 或 Cursor Agent 中使用：
+- `/yx-commands-commit` - 分析代码变更并提交
+- `/yx-commands-push` - 推送代码
+- `/yx-commands-mr` - 创建合并请求
+- `/yx-commands-review` - 查看代码差异
+- `/yx-commands-commit-push-mr` - 一键完成完整工作流
 
 ## 系统要求
 
@@ -252,29 +250,36 @@ yx-code mr -m "添加用户登录功能"
 yx-code diff
 ```
 
-## Claude Code 集成
+## AI Agent 集成
 
-本工具提供 Claude Code Skills/Commands 支持，可在 Claude Code 中通过斜杠命令自动化云效工作流。
+本工具基于 [Agent Skills](https://agentskills.io/) 开放标准，兼容 Claude Code、Cursor 等支持该标准的 AI 编程工具，可通过斜杠命令自动化云效工作流。
+
+### 兼容性
+
+| 工具 | 支持 | 说明 |
+|------|------|------|
+| [Claude Code](https://claude.ai/code) | ✅ | 原生支持，从 `~/.claude/skills/` 加载 |
+| [Cursor](https://cursor.com) | ✅ | 兼容加载 `~/.claude/skills/` 目录 |
 
 ### 可用命令
 
 | 命令 | 功能 |
 |------|------|
-| `/yx-commands:commit` | 分析代码变更并提交 |
-| `/yx-commands:push` | 推送代码到远程 |
-| `/yx-commands:mr` | 创建合并请求 |
-| `/yx-commands:review` | 查看分支代码差异 |
-| `/yx-commands:commit-push-mr` | 一键完成提交、推送、创建MR |
+| `/yx-commands-commit` | 分析代码变更并提交 |
+| `/yx-commands-push` | 推送代码到远程 |
+| `/yx-commands-mr` | 创建合并请求 |
+| `/yx-commands-review` | 查看分支代码差异 |
+| `/yx-commands-commit-push-mr` | 一键完成提交、推送、创建MR |
 
 ### 使用示例
 
-在 Claude Code 中直接输入命令：
+在 Claude Code 或 Cursor Agent 中直接输入命令：
 
 ```
-/yx-commands:commit-push-mr
+/yx-commands-commit-push-mr
 ```
 
-Claude 会自动：
+AI 会自动：
 1. 分析代码变更
 2. 生成 commit message
 3. 执行 commit、push
@@ -282,7 +287,19 @@ Claude 会自动：
 
 ### 安装
 
-npm 安装后自动部署到 `~/.claude/commands/yx-commands/` 和 `~/.claude/skills/yx-commands/`。
+npm 安装后自动将每个 skill 部署为独立符号链接到 `~/.claude/skills/`：
+
+```
+~/.claude/skills/
+├── yx-commands/              ← 主 skill（工作流路由）
+├── yx-commands-commit/       ← 提交命令
+├── yx-commands-push/         ← 推送命令
+├── yx-commands-mr/           ← 创建 MR
+├── yx-commands-review/       ← 代码审查
+└── yx-commands-commit-push-mr/ ← 一键完整工作流
+```
+
+Cursor 会自动从 `~/.claude/skills/` 加载，无需额外配置。
 
 ## 相关链接
 
