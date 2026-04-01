@@ -23,43 +23,55 @@ function removeExisting(target) {
 
 function deployPlugin() {
   const claudeDir = path.join(os.homedir(), '.claude');
-  const commandsDir = path.join(claudeDir, 'commands');
   const skillsDir = path.join(claudeDir, 'skills');
 
   // 获取 npm 包路径
   const packageDir = path.dirname(require.main.filename);
   const pluginDir = path.join(packageDir, '..', 'claude-plugin');
+  const skillsSource = path.join(pluginDir, 'skills');
 
   // 确保目标目录存在
-  if (!fs.existsSync(commandsDir)) {
-    fs.mkdirSync(commandsDir, { recursive: true });
-  }
   if (!fs.existsSync(skillsDir)) {
     fs.mkdirSync(skillsDir, { recursive: true });
   }
 
-  const commandsTarget = path.join(commandsDir, 'yx-commands');
-  const skillsTarget = path.join(skillsDir, 'yx-commands');
-  const commandsSource = path.join(pluginDir, 'commands');
-  const skillsSource = path.join(pluginDir, 'skills');
+  // 清理旧的 commands 软链接（如果存在）
+  const oldCommandsTarget = path.join(claudeDir, 'commands', 'yx-commands');
+  removeExisting(oldCommandsTarget);
 
-  // 创建/更新 commands 软链接
-  if (fs.existsSync(commandsSource)) {
-    if (removeExisting(commandsTarget)) {
-      fs.symlinkSync(commandsSource, commandsTarget);
-      console.log('✅ 已链接 commands 到 ~/.claude/commands/yx-commands/');
+  // 清理旧版本的单一 skills 软链接（指向整个 skills 目录的）
+  const oldSkillsTarget = path.join(skillsDir, 'yx-commands');
+  try {
+    const linkTarget = fs.readlinkSync(oldSkillsTarget);
+    if (linkTarget === skillsSource || linkTarget.endsWith('/claude-plugin/skills')) {
+      removeExisting(oldSkillsTarget);
+    }
+  } catch (e) { /* not a symlink or doesn't exist */ }
+
+  if (!fs.existsSync(skillsSource)) {
+    console.log('⚠️  skills 目录不存在:', skillsSource);
+    return;
+  }
+
+  // 为每个 skill 子目录单独创建符号链接
+  const entries = fs.readdirSync(skillsSource, { withFileTypes: true });
+  const linked = [];
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    const source = path.join(skillsSource, entry.name);
+    const target = path.join(skillsDir, entry.name);
+    if (removeExisting(target)) {
+      fs.symlinkSync(source, target);
+      linked.push(entry.name);
     }
   }
 
-  // 创建/更新 skills 软链接
-  if (fs.existsSync(skillsSource)) {
-    if (removeExisting(skillsTarget)) {
-      fs.symlinkSync(skillsSource, skillsTarget);
-      console.log('✅ 已链接 skills 到 ~/.claude/skills/yx-commands/');
-    }
+  if (linked.length > 0) {
+    console.log('✅ 已链接 ' + linked.length + ' 个 skills 到 ~/.claude/skills/');
+    linked.forEach(name => console.log('   - ' + name));
   }
 
-  console.log('\n可用命令: /yx-commands:commit, /yx-commands:push, /yx-commands:mr, /yx-commands:review\n');
+  console.log('\n可用命令: /yx-commands-commit, /yx-commands-push, /yx-commands-mr, /yx-commands-review, /yx-commands-commit-push-mr\n');
 }
 
 console.log('\n✅ yx-code CLI installed successfully!\n');

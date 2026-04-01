@@ -1,5 +1,5 @@
 ---
-name: commit
+name: yx-commands-commit
 description: 分析代码变更并提交到云效仓库
 ---
 

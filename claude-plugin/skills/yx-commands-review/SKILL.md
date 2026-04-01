@@ -22,17 +22,25 @@ disable-model-invocation: false
 yx-code diff --target <target> --source <source>
 ```
 
-### 步骤 2: 收集上下文信息
+### 步骤 2: 展示代码差异
 
-使用 Haiku agent 收集以下信息：
+将 yx-code diff 的完整输出直接展示给用户，包括：
+- 变更统计摘要（文件数、新增行数、删除行数）
+- 每个变更文件的完整 diff 内容
+
+保留原始的 diff 代码块格式，让用户能直接阅读代码差异。
+
+### 步骤 3: 收集上下文信息
+
+使用轻量级 agent 收集以下信息：
 
 1. **获取 CLAUDE.md 文件列表**：查找项目根目录及变更文件所在目录的 CLAUDE.md 文件
 2. **获取变更摘要**：分析差异内容，返回变更的简要总结
 3. **检查审查资格**：确认分支是否需要进行代码审查（排除已关闭、草稿、自动生成等）
 
-### 步骤 3: 并行代码审查
+### 步骤 4: 并行代码审查
 
-启动 5 个并行的 Sonnet agent 独立进行代码审查：
+启动 5 个并行 agent 独立进行代码审查：
 
 **Agent #1: CLAUDE.md 合规审查**
 - 检查变更是否遵循项目 CLAUDE.md 中的规范
@@ -60,9 +68,9 @@ yx-code diff --target <target> --source <source>
 - 确保变更遵循注释中的指导
 - 返回问题列表及原因（代码注释合规性）
 
-### 步骤 4: 问题置信度评分
+### 步骤 5: 问题置信度评分
 
-对步骤 3 发现的每个问题，启动并行 Haiku agent 进行置信度评分：
+对步骤 4 发现的每个问题，启动并行轻量级 agent 进行置信度评分：
 
 **评分标准（0-100 分）**：
 
@@ -74,7 +82,7 @@ yx-code diff --target <target> --source <source>
 | 75 | 高度确信。验证了这是很可能在现实中发生的真正问题。当前方案不充分。问题很重要，直接影响功能，或在 CLAUDE.md 中明确提及 |
 | 100 | 绝对确定。验证了这是肯定会在现实中频繁发生的真正问题。证据直接确认 |
 
-### 步骤 5: 过滤并输出结果
+### 步骤 6: 过滤并输出结果
 
 1. **过滤问题**：仅保留评分 >= 80 的问题
 2. **重新检查资格**：确认分支仍符合审查条件
@@ -83,7 +91,7 @@ yx-code diff --target <target> --source <source>
 ### 使用方式
 
 ```
-/yx-commands:review [-t target] [-s source]
+/yx-commands-review [-t target] [-s source]
 ```
 
 参数：
@@ -94,12 +102,12 @@ yx-code diff --target <target> --source <source>
 
 查看与 develop 的差异：
 ```
-/yx-commands:review
+/yx-commands-review
 ```
 
 查看 feature 分支与 main 的差异：
 ```
-/yx-commands:review -t main -s feature-branch
+/yx-commands-review -t main -s feature-branch
 ```
 
 ### 输出格式
