@@ -197,8 +197,8 @@ yx-code summary --period week      # 生成工作总结
 ## 从源码安装
 
 ```bash
-git clone https://github.com/ZLStream/yunxiao-code.git
-cd yunxiao-code
+git clone https://github.com/ZLStream/yunxiao-commands.git
+cd yunxiao-commands
 make build-local
 sudo make install
 

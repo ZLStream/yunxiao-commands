@@ -1,6 +1,6 @@
 {
   "name": "yunxiao-code",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "阿里云云效 CLI 工具",
   "keywords": [
     "aliyun",
@@ -13,11 +13,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ZLStream/yunxiao-code.git"
+    "url": "git+https://github.com/ZLStream/yunxiao-commands.git"
   },
-  "homepage": "https://github.com/ZLStream/yunxiao-code#readme",
+  "homepage": "https://github.com/ZLStream/yunxiao-commands#readme",
   "bugs": {
-    "url": "https://github.com/ZLStream/yunxiao-code/issues"
+    "url": "https://github.com/ZLStream/yunxiao-commands/issues"
   },
   "bin": {
     "yx-code": "bin/yx-code.js"
