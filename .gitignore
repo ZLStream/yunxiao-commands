@@ -3,6 +3,7 @@
 
 # Binary
 bin/
+!bin/yx-code.js
 
 # IDE
 .idea/
